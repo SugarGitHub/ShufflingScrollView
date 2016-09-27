@@ -57,7 +57,7 @@
 
 #pragma mark --ShufflingScrollViewDelegate
 - (void)shufflingScrollViewClick:(NSInteger)index{
-    NSLog(@"下表为%zi",index);
+    NSLog(@"下标为%zi",index);
 }
 
 

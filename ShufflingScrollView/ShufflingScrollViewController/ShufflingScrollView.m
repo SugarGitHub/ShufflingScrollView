@@ -165,45 +165,35 @@
 }
 
 
-- (NSString *)urlStrArrMNextORLastObj:(NSString *)obj isNext:(BOOL)isNext{
-    NSString *urlStr=nil;
-    for (NSInteger i=0; i<_urlStrArrM.count; i++) {
-        if ([_urlStrArrM[i] isEqualToString:obj]) {
-            if (isNext) {
-                if(i==_urlStrArrM.count-1){
-                    urlStr=[_urlStrArrM firstObject];
-                }else{
-                    urlStr=_urlStrArrM[i+1];
-                }
-            }else{
-                if (i==0) {
-                    urlStr=[_urlStrArrM lastObject];
-                }else{
-                    urlStr=_urlStrArrM[i-1];
-                }
-            }
-            _index=i;
-            _pageControl.currentPage=_index;
-            return urlStr;
-            break;
-        }
-    }
-    return urlStr;
-    
-}
-
-
 - (void)scrollViewMove{
     NSInteger count=(NSInteger)_scrollView.contentOffset.x/(NSInteger)_scrollView.FrameSizeWidth;
     if (count==0) {
         _currentUrlStr=[_showImgArrM firstObject];
+        _index--;
+        if (_index<0) {
+            _index=_urlStrArrM.count-1;
+        }
     }
     else if(count==2){
         _currentUrlStr=[_showImgArrM lastObject];
+        _index++;
+        if (_index>_urlStrArrM.count-1) {
+            _index=0;
+        }
     }
+    
+    _pageControl.currentPage=_index;
     [_showImgArrM replaceObjectAtIndex:1 withObject:_currentUrlStr];
-    [_showImgArrM replaceObjectAtIndex:2 withObject:[self urlStrArrMNextORLastObj:_currentUrlStr isNext:YES]];
-    [_showImgArrM replaceObjectAtIndex:0 withObject:[self urlStrArrMNextORLastObj:_currentUrlStr isNext:NO]];
+    if (_index==_urlStrArrM.count-1) {
+        [_showImgArrM replaceObjectAtIndex:0 withObject:_urlStrArrM[_index-1]];
+        [_showImgArrM replaceObjectAtIndex:2 withObject:[_urlStrArrM firstObject]];
+    }else if (_index==0){
+        [_showImgArrM replaceObjectAtIndex:2 withObject:_urlStrArrM[_index+1]];
+        [_showImgArrM replaceObjectAtIndex:0 withObject:[_urlStrArrM lastObject]];
+    }else{
+        [_showImgArrM replaceObjectAtIndex:2 withObject:_urlStrArrM[_index+1]];
+        [_showImgArrM replaceObjectAtIndex:0 withObject:_urlStrArrM[_index-1]];
+    }
     [self refreshImg];
 }
 
